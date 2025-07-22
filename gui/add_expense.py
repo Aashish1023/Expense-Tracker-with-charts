@@ -13,9 +13,11 @@ def add_expense():
    if conn:
       cursor = conn.cursor()
       try:
-         cursor.execute("
-                        INSERT INTO expenses (category, amount, date)
-                        VAULES (%s, %s, %s),(category, amount, date)")         conn.commit()
+         cursor.execute(
+            "INSERT INTO expenses (category, amount, date) VALUES (%s, %s, %s)",
+            (category, amount, date)
+         )
+         conn.commit()
          print("Expense added successfully.")
       except Exception as e:
          print(f"An error occurred: {e}")
@@ -26,9 +28,5 @@ def add_expense():
       print("Failed to connect to the database.")
 
 
-    db = connect_db()
-    cursor = db.cursor()
-    sql = "INSERT INTO expenses (amount, category, date, note) VALUES (%s, %s, %s, %s)"
-    cursor.execute(sql, (amount, category, date, note)) 
-    db.commit()
-    db.close()
+if __name__ == "__main__":
+    add_expense()
