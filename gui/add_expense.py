@@ -24,10 +24,16 @@ def add_expense():
    try: # Connect to the database
       amount = float(amount_str)
       conn = create_connection()
+      if conn is None:
+         raise Exception("Failed to connect to the database.")
       cursor = conn.cursor()
-      cursor.execute("INSERT INTO expenses (date, category, amount, description) VALUES (%s, %s, %s, %s)", (date, category, amount, description))
+      cursor.execute(
+         "INSERT INTO expenses (date, category, amount, description) VALUES (%s, %s, %s, %s)", 
+         (date, category, amount, description)
+         )
       
       conn.commit()
+      print("Expenses Add successfully!")
       cursor.close()
       conn.close()
       messagebox.showinfo("Success", "Expense added successfully!")
@@ -36,7 +42,7 @@ def add_expense():
       entry_amount.delete(0, tk.END)
       entry_description.delete(0, tk.END)
    except Exception as e:
-      messagebox.showerror("Error", str(e))
+      messagebox.showerror("Error Occured:", str(e))
 
 # GUI Setup
 window = tk.Tk()
