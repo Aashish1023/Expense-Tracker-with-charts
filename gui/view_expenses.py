@@ -1,7 +1,12 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTKAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from utils.db_connection import create_connection
 
 def fetcha_expenses():
@@ -26,28 +31,22 @@ def populate_table(data):
 def draw_bar_chart(data):
     category_totals = {}
     for row in data:
-        category = row[1]
-        amount = row[2]
+        print(row)  # Debug: See the structure
+        id, date, category, amount, description = row  # Adjust if needed
+        amount = float(amount)  # Convert string amount to number
         category_totals[category] = category_totals.get(category, 0) + amount
+
+    categories = list(category_totals.keys())
+    totals = list(category_totals.values())
 
     fig, ax = plt.subplots(figsize =(5, 3))
     ax.bar(category_totals.keys(), category_totals.values(), color='skyblue')
-    ax.set_tilte('Expenses by Category')
+    ax.set_title('Expenses by Category')
     ax.set_xlabel('Amount')
 
     canvas = FigureCanvasTkAgg(fig, master=window)
     canvas.draw()
     canvas.get_tk_widget().pack(pady=10)
-
-
-#Display the expenses results
-print("\n All Expenses: \n")
-print("{:<5} {:<15} {:<10} {:<15}".format("ID", "Category", "Amount", "Date"))
-print("-" * 50)
-
-for row in rows:
-    print("{:<5} {:<15} {:<10} {:<15}".format(row[0], row[1], row[2], row[3]))
-
 
 #GUI Setup
 window = tk.Tk()
@@ -58,13 +57,13 @@ window.geometry("700x500")
 columns = ("ID", "Date", "Category", "Amount", "Description")
 tree = ttk.Treeview(window, columns=columns, show="headings")
 for col in columns:
-    tree.headings(col, text=col)
+    tree.heading(col, text=col)
     tree.column(col, width="100")
 tree.pack(pady=10, fill='x')
 
 # Fetch and populate data
 expense_data = fetcha_expenses()
 populate_table(expense_data)
-show_chart(expense_data)
+draw_bar_chart(expense_data)
 
 window.mainloop()
