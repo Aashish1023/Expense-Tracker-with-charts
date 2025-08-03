@@ -3,14 +3,14 @@ from mysql.connector import Error
 
 def create_connection():
     try:
-        connection = mysql.connector.connect(
+        conn = mysql.connector.connect(
             host = "localhost",
-            user = "your_username",
+            user = "root",
             password = "",
             database = "expense_tracker"
         )
-        if connection.is_connected():
-            return connection
+        if conn.is_connected():
+            return conn
     except Error as e:
         print(f"Error while connecting to MySQL: {e}")
         return None
