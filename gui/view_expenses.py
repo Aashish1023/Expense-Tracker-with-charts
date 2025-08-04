@@ -48,6 +48,7 @@ def draw_bar_chart(data):
     canvas.draw()
     canvas.get_tk_widget().pack(pady=10)
 
+# Function to filter expenses based on date and category
 def filter_expenses(date_filter=None, category_filter=None):
     conn = create_connection()
     if not conn:
@@ -69,6 +70,31 @@ def filter_expenses(date_filter=None, category_filter=None):
     cursor.close()
     conn.close()
     return data
+
+def draw_pie_chart(data):
+    category_totals = {}
+    for row in data:
+        category = row[1]
+        amount = float(row[2])
+        category_totals[category] = category_totals.get(category, 0) + amount
+
+    labels = list(category_totals.keys())
+    sizes = list(category_totals.values())
+
+    fig, ax = plt.subplots()
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%')
+    ax.set_title("Expenses by Category")
+    canvas = FigureCanvasTkAgg(fig, master=window)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+
+def export_to_csv(data):
+    import csv
+    with open("expenses_export.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Date", "Category", "Amount", "Description"])
+        writer.writerows(data)
+
 
 #GUI Setup
 window = tk.Tk()
