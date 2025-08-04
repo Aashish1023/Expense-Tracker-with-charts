@@ -48,6 +48,28 @@ def draw_bar_chart(data):
     canvas.draw()
     canvas.get_tk_widget().pack(pady=10)
 
+def filter_expenses(date_filter=None, category_filter=None):
+    conn = create_connection()
+    if not conn:
+        return []
+
+    cursor = conn.cursor()
+    query = "SELECT id, date, category, amount, description FROM expenses WHERE 1=1"
+    values = []
+
+    if date_filter:
+        query += " AND date = %s"
+        values.append(date_filter)
+    if category_filter:
+        query += " AND category = %s"
+        values.append(category_filter)
+
+    cursor.execute(query, tuple(values))
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return data
+
 #GUI Setup
 window = tk.Tk()
 window.title("View Expenses")
