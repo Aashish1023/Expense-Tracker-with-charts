@@ -88,12 +88,7 @@ def draw_pie_chart(data):
     canvas.draw()
     canvas.get_tk_widget().pack()
 
-def export_to_csv(data):
-    import csv
-    with open("expenses_export.csv", "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["Date", "Category", "Amount", "Description"])
-        writer.writerows(data)
+
 
 
 #GUI Setup
