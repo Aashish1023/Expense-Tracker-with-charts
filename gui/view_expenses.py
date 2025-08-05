@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from utils.db_connection import create_connection
@@ -26,6 +26,26 @@ def populate_table(data):
         tree.insert(row)
     for row in data:
         tree.insert("", "end", values=row)
+
+def delete_record():
+    selected_item = tree.selection()
+    if not selected_item:
+        messagebox.showwarning("No Selection", "Please select a record to delete.")
+        return
+    
+    record = tree.item(selected_item)["values"]
+    record_id = record[0]  # Assuming the first column is the ID
+
+    confirm = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete record ID {record_id}?")
+    if confirm:
+        conn = create_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM expenses WHERE id = %s", (record_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        populate_table()
+        messagebox.showinfo("Deleted", "Record deleted Successfully!")
 
 #draw bar chart from data
 def draw_bar_chart(data):
@@ -87,7 +107,6 @@ def draw_pie_chart(data):
     canvas = FigureCanvasTkAgg(fig, master=window)
     canvas.draw()
     canvas.get_tk_widget().pack()
-
 
 
 
