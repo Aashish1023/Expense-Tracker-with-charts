@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from utils.db_connection import create_connection
 
-def fetcha_expenses():
+def fetch_expenses():
     conn = create_connection()
     if not conn:
         return[]
@@ -25,7 +25,6 @@ def populate_table(data):
     tree.delete(*tree.get_children())  # ✅ Clear existing rows
     for row in data:
         tree.insert('', 'end', values=row)  # ✅ Insert new rows
-
 
 def delete_record():
     selected_item = tree.selection()
@@ -44,7 +43,10 @@ def delete_record():
         conn.commit()
         cursor.close()
         conn.close()
-        populate_table()
+        
+        updated_data = fetch_expenses()
+        populate_table(updated_data)
+
         messagebox.showinfo("Deleted", "Record deleted Successfully!")
 
 #draw bar chart from data
@@ -94,8 +96,8 @@ def filter_expenses(date_filter=None, category_filter=None):
 def draw_pie_chart(data):
     category_totals = {}
     for row in data:
-        category = row[1]
-        amount = float(row[2])
+        category = row[2]
+        amount = float(row[3])
         category_totals[category] = category_totals.get(category, 0) + amount
 
     labels = list(category_totals.keys())
@@ -104,6 +106,7 @@ def draw_pie_chart(data):
     fig, ax = plt.subplots()
     ax.pie(sizes, labels=labels, autopct='%1.1f%%')
     ax.set_title("Expenses by Category")
+
     canvas = FigureCanvasTkAgg(fig, master=window)
     canvas.draw()
     canvas.get_tk_widget().pack()
@@ -129,7 +132,7 @@ btn_delete = tk.Button(window, text="Delete Selected", command=delete_record, bg
 btn_delete.pack(pady=5)
 
 # Fetch and populate data
-expense_data = fetcha_expenses()
+expense_data = fetch_expenses()
 populate_table(expense_data)
 draw_bar_chart(expense_data)
 
