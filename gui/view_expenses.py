@@ -26,6 +26,30 @@ def populate_table(data):
     for row in data:
         tree.insert('', 'end', values=row)  # ✅ Insert new rows
 
+#Search function
+def search_expenses():
+    data = entry_search_date.get()
+    category = entry_search_category.get()
+
+    conn = create_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM expenses WHERE 1=1"
+    params = []
+
+    if data:
+        query += " AND date = %s"
+        params.append(data)
+    if category:
+        query += " AND category LIKE %s"
+        params.append('%s' + category + '%s')
+
+    cursor.execute(query, params)
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    populate_table(results)
+
 def delete_record():
     selected_item = tree.selection()
     if not selected_item:
@@ -43,7 +67,7 @@ def delete_record():
         conn.commit()
         cursor.close()
         conn.close()
-        
+
         updated_data = fetch_expenses()
         populate_table(updated_data)
 
@@ -117,6 +141,9 @@ def draw_pie_chart(data):
 window = tk.Tk()
 window.title("View Expenses")
 window.geometry("700x500")
+
+# Search Bar
+
 
 # Table Setup
 columns = ("ID", "Date", "Category", "Amount", "Description")
