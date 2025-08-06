@@ -22,10 +22,10 @@ def fetcha_expenses():
     return data
 
 def populate_table(data):
-    for row in tree.get_children():
-        tree.insert(row)
+    tree.delete(*tree.get_children())  # ✅ Clear existing rows
     for row in data:
-        tree.insert("", "end", values=row)
+        tree.insert('', 'end', values=row)  # ✅ Insert new rows
+
 
 def delete_record():
     selected_item = tree.selection()
