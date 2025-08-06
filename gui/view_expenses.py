@@ -118,10 +118,15 @@ window.geometry("700x500")
 # Table Setup
 columns = ("ID", "Date", "Category", "Amount", "Description")
 tree = ttk.Treeview(window, columns=columns, show="headings")
+
 for col in columns:
     tree.heading(col, text=col)
     tree.column(col, width="100")
 tree.pack(pady=10, fill='x')
+
+# Buttons
+btn_delete = tk.Button(window, text="Delete Selected", command=delete_record, bg="red", fg="white")
+btn_delete.pack(pady=5)
 
 # Fetch and populate data
 expense_data = fetcha_expenses()

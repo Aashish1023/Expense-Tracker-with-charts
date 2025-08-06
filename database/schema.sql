@@ -8,4 +8,6 @@ CREATE TABLE IF NOT EXIST expenses (
     category VARCHAR(100),
     amount DECIMAL(10, 2),
     description TEXT
+    ALTER TABLE expenses ADD id INT AUTO_INCREMENT PRIMARY KEY;
+
 );
