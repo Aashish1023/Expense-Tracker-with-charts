@@ -146,26 +146,41 @@ window.geometry("700x500")
 search_frame = tk.Frame(window)
 search_frame.pack(pady=10)
 
-#date Entry
-tk.Label(search_frame, text="Date (YYYY-MM-DD):").grid(row=0, column=0, padx=5)
-enter_search_date = tk.Entry(search_frame)
-enter_search_date.grid(row=0, column=1, padx=5)
+# Add a button to clear the search fields
+# --- Search Section ---
+frame_filters = tk.Frame(window)
+frame_filters.pack(pady=5)
 
-# Category Entry
-tk.Label(search_frame, text="Category").grid(row=0, column=2, padx=5)
-enter_search_category = ttk.Combobox(search_frame, values=["Food",  "Travel", "Shopping", "Bills", "Other"])
-enter_search_category.grid(row=0, column=3, padx=5)
+tk.Label(frame_filters, text="Date (YYYY-MM-DD):").grid(row=0, column=0, padx=5)
+entry_search_date = tk.Entry(frame_filters)
+entry_search_date.grid(row=0, column=1, padx=5)
+
+tk.Label(frame_filters, text="Category:").grid(row=0, column=2, padx=5)
+entry_search_category = tk.Entry(frame_filters)
+entry_search_category.grid(row=0, column=3, padx=5)
+
+def apply_filters():
+    date_filter = entry_search_date.get().strip()
+    category_filter = entry_search_category.get().strip()
+    filtered_data = filter_expenses(date_filter if date_filter else None,
+                                    category_filter if category_filter else None)
+    populate_table(filtered_data)
+
+btn_filter = tk.Button(frame_filters, text="Search", command=apply_filters, bg="red",fg="white")
+btn_filter.grid(row=0, column=4, padx=10)
+
+
 
 # Search Button
 def on_search():
     date_val = entry_search_date.get().strip()
     category_val = enter_search_category.get().strip()
     filtered_date =filter_expenses(date_val if date_val else None, catgeory_val if category_val else None)
-    populated_table(filtered_date)
-    draw_bar_chart(filtered_date)
+    populate_table(filtered_data)
+    draw_bar_chart(filtered_data)
 
-btn_search = tk.Button(search_frame, text="Search", command=on_search, bg="blue", fg="white")
-btn_search.grid(row=0, column=4, padx=10)
+#   btn_search = tk.Button(search_frame, text="Search", command=on_search, bg="blue", fg="white")
+#   btn_search.grid(row=0, column=4, padx=10)
 
 # Table Setup
 columns = ("ID", "Date", "Category", "Amount", "Description")
