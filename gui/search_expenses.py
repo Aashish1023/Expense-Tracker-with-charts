@@ -1,4 +1,5 @@
-import tkiner as tk
+from os import execle
+import tkinter as tk
 from tkinter import ttk, messagebox
 import mysql.connector
 
@@ -33,7 +34,7 @@ def fetch_filtered_expenses(date_filter=None, category_filter=None):
         query += " AND category LIKE %s"
         values.append('%' + category_filter + '%')
 
-    cursor, execute(query, tuple(values))
+    cursor, execle(query, tuple(values))
     date = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -65,3 +66,19 @@ entry_date.pack(pady=5)
 tk.Label(window, text="Search by Category:").pack()
 entry_category = tk.Entry(window)   
 entry_category.pack(pady=5)
+
+# Search Button
+btn_search = tk.Button(window, text="Search", command=search_expenses, bg="red", fg="white")
+btn_search.pack(pady=10)
+
+# Table to show results
+columns = ("ID", "Date", "Category", "Amount", "Description")
+tree = ttk.Treeview(window, columns=columns, show="headings")
+
+for col in columns:
+    tree.heading(col, text=col)
+    tree.column(col, width="100")   
+
+tree.pack(pady=10, fill='both ', expand=True)
+
+window.mainloop()
