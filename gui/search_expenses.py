@@ -38,3 +38,10 @@ def fetch_filtered_expenses(date_filter=None, category_filter=None):
     cursor.close()
     conn.close()
     return date
+
+# Populate the Treeview with expenses
+def populate_table(date):
+    tree.delete(*tree.get_children())
+    for row in date:
+        tree.insert('', 'end', values=row)
+
