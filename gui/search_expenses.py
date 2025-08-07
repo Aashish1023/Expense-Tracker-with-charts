@@ -45,3 +45,9 @@ def populate_table(date):
     for row in date:
         tree.insert('', 'end', values=row)
 
+#Search button action
+def search_expenses():
+    date = entry_search_date.get().strip()
+    category = entry_category.get().strip()
+    data = fetch_filtered_expenses(date, category)
+    populate_table(data)
