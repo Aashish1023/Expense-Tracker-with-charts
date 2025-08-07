@@ -51,3 +51,17 @@ def search_expenses():
     category = entry_category.get().strip()
     data = fetch_filtered_expenses(date, category)
     populate_table(data)
+
+# GUI Setup
+window = tk.Tk()
+window.title("Search Expenses")
+window.geometry("600x400")
+
+#Filter: Date and Category
+tk.Label(window,text="Search by Date (YYYY-MM-DD):").pack()
+entry_date = tk.Entry(window)
+entry_date.pack(pady=5)
+
+tk.Label(window, text="Search by Category:").pack()
+entry_category = tk.Entry(window)   
+entry_category.pack(pady=5)
